@@ -1,4 +1,4 @@
-package com.devops.alternance_tracker_devops;
+package com.devops.alternancetracker;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

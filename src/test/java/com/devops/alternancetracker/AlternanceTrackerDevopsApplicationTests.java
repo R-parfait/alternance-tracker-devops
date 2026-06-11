@@ -1,4 +1,4 @@
-package com.devops.alternance_tracker_devops;
+package com.devops.alternancetracker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

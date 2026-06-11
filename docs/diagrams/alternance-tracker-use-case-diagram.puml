@@ -1,0 +1,29 @@
+@startuml
+title Diagramme de cas d'utilisation - Alternance Tracker DevOps
+
+left to right direction
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor Utilisateur
+
+rectangle "Alternance Tracker DevOps" {
+    usecase "Consulter la liste\ndes candidatures" as UC_List
+    usecase "Consulter le détail\nd'une candidature" as UC_Detail
+    usecase "Enregistrer une\ncandidature" as UC_Create
+    usecase "Modifier une\ncandidature" as UC_Update
+    usecase "Mettre à jour le statut\nd'une candidature" as UC_Status
+    usecase "Supprimer une\ncandidature" as UC_Delete
+}
+
+Utilisateur -- UC_List
+Utilisateur -- UC_Detail
+Utilisateur -- UC_Create
+Utilisateur -- UC_Update
+Utilisateur -- UC_Status
+Utilisateur -- UC_Delete
+
+UC_Status -|> UC_Update
+
+@enduml

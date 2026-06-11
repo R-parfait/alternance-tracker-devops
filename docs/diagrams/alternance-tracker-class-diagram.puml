@@ -1,0 +1,124 @@
+@startuml
+title Diagramme de classes - Alternance Tracker DevOps
+
+skinparam classAttributeIconSize 0
+top to bottom direction
+
+interface "JpaRepository<JobApplication, Long>" as JpaRepository <<interface, Spring Data JPA>>
+
+package model {
+    class JobApplication <<class, Entity>> {
+        - id: Long
+        - company: String
+        - position: String
+        - city: String
+        - status: ApplicationStatus
+        - appliedDate: LocalDate
+        --
+        + JobApplication()
+        + JobApplication(company: String, position: String, city: String, status: ApplicationStatus, appliedDate: LocalDate)
+        + getId(): Long
+        + getCompany(): String
+        + setCompany(company: String): void
+        + getPosition(): String
+        + setPosition(position: String): void
+        + getCity(): String
+        + setCity(city: String): void
+        + getStatus(): ApplicationStatus
+        + setStatus(status: ApplicationStatus): void
+        + getAppliedDate(): LocalDate
+        + setAppliedDate(appliedDate: LocalDate): void
+    }
+
+    enum ApplicationStatus <<enum>> {
+        PENDING
+        INTERVIEW
+        REJECTED
+        ACCEPTED
+    }
+}
+
+package repository {
+    interface JobApplicationRepository <<interface>> {
+    }
+}
+
+package dto {
+    class JobApplicationRequest <<record>> {
+        - company: String
+        - position: String
+        - city: String
+        - status: ApplicationStatus
+        - appliedDate: LocalDate
+    }
+
+    class JobApplicationResponse <<record>> {
+        - id: Long
+        - company: String
+        - position: String
+        - city: String
+        - status: ApplicationStatus
+        - appliedDate: LocalDate
+    }
+}
+
+package mapper {
+    class JobApplicationMapper <<class, Component>> {
+        + toEntity(request: JobApplicationRequest): JobApplication
+        + toResponse(application: JobApplication): JobApplicationResponse
+        + updateEntity(request: JobApplicationRequest, application: JobApplication): void
+    }
+}
+
+package service {
+    class JobApplicationService <<class, Service>> {
+        - applicationRepository: JobApplicationRepository
+        - applicationMapper: JobApplicationMapper
+        --
+        + JobApplicationService(applicationRepository: JobApplicationRepository, applicationMapper: JobApplicationMapper)
+        + getAllApplications(): List<JobApplicationResponse>
+        + getApplicationById(id: Long): JobApplicationResponse
+        + createApplication(request: JobApplicationRequest): JobApplicationResponse
+        + updateApplication(id: Long, request: JobApplicationRequest): JobApplicationResponse
+        + deleteApplication(id: Long): void
+    }
+}
+
+package controller {
+    class JobApplicationController <<class, RestController>> {
+        - applicationService: JobApplicationService
+        --
+        + JobApplicationController(applicationService: JobApplicationService)
+        + getAllApplications(): List<JobApplicationResponse>
+        + getApplicationById(id: Long): JobApplicationResponse
+        + createApplication(request: JobApplicationRequest): JobApplicationResponse
+        + updateApplication(id: Long, request: JobApplicationRequest): JobApplicationResponse
+        + deleteApplication(id: Long): void
+    }
+}
+
+package exception {
+    class JobApplicationNotFoundException <<class, Exception>> {
+        + JobApplicationNotFoundException(id: Long)
+    }
+
+    class GlobalExceptionHandler <<class, RestControllerAdvice>> {
+        + handleNotFound(exception: JobApplicationNotFoundException): ErrorResponse
+    }
+
+    class ErrorResponse <<record>> {
+        - timestamp: LocalDateTime
+        - status: int
+        - message: String
+    }
+}
+
+class RuntimeException <<class, Java>>
+
+JpaRepository <|-- JobApplicationRepository
+RuntimeException <|-- JobApplicationNotFoundException
+JobApplicationService --> JobApplicationRepository
+JobApplicationService --> JobApplicationMapper
+JobApplicationController --> JobApplicationService
+
+@enduml
