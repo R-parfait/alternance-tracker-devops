@@ -1,3 +1,15 @@
 spring:
   application:
     name: alternance-tracker-devops
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/alternancedb
+    username: postgres
+    password: secret
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Crée ou met à jour la table automatiquement
+    show-sql: true # Affiche les requêtes SQL générées dans le terminal
+    open-in-view: false
