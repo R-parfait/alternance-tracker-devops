@@ -2,6 +2,7 @@ package com.devops.alternancetracker.service;
 
 import com.devops.alternancetracker.dto.JobApplicationRequest;
 import com.devops.alternancetracker.dto.JobApplicationResponse;
+import com.devops.alternancetracker.exception.JobApplicationNotFoundException;
 import com.devops.alternancetracker.mapper.JobApplicationMapper;
 import com.devops.alternancetracker.model.JobApplication;
 import com.devops.alternancetracker.repository.JobApplicationRepository;
@@ -32,5 +33,31 @@ public class JobApplicationService {
         JobApplication savedApplication = applicationRepository.save(application);
 
         return applicationMapper.toResponse(savedApplication);
+    }
+
+    public JobApplicationResponse getApplicationById(Long id){
+        JobApplication application = applicationRepository.findById(id)
+            .orElseThrow(() -> new JobApplicationNotFoundException(id));
+
+        return applicationMapper.toResponse(application);
+    }
+
+    public JobApplicationResponse updateApplication(Long id, JobApplicationRequest request){
+        JobApplication application = applicationRepository.findById(id)
+            .orElseThrow(() -> new JobApplicationNotFoundException(id));
+
+        applicationMapper.updateEntity(request, application);
+
+        JobApplication updatedApplication = applicationRepository.save(application);
+
+        return applicationMapper.toResponse(updatedApplication);
+    }
+
+    public void deleteApplication(Long id){
+        if(!applicationRepository.existsById(id)){
+            throw new JobApplicationNotFoundException(id);
+        }
+
+        applicationRepository.deleteById(id);
     }
 }

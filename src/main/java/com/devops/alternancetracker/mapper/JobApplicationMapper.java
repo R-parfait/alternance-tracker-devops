@@ -28,5 +28,13 @@ public class JobApplicationMapper {
             application.getAppliedDate()
         );
     }
+
+    public void updateEntity(JobApplicationRequest request, JobApplication application){
+        application.setCompany(request.company());
+        application.setPosition(request.position());
+        application.setCity(request.city());
+        application.setStatus(request.status());
+        application.setAppliedDate(request.appliedDate());
+    }
     
 }

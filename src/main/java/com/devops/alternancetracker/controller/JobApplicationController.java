@@ -29,4 +29,22 @@ public class JobApplicationController {
     public JobApplicationResponse createApplication(@Valid @RequestBody JobApplicationRequest request) {
         return this.applicationService.createApplication(request);
     }
+
+    @GetMapping("/{id}")
+    public JobApplicationResponse getApplicationById(@PathVariable Long id){
+        return this.applicationService.getApplicationById(id);
+    }
+
+    @PutMapping("/{id}")
+    public JobApplicationResponse updateApplication(
+        @PathVariable Long id, 
+        @Valid @RequestBody JobApplicationRequest request){
+        return this.applicationService.updateApplication(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteApplication(@PathVariable Long id){
+        this.applicationService.deleteApplication(id);
+    }
 }
