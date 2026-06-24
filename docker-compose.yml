@@ -10,7 +10,33 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d alternancedb"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - tracker-network
+    restart: unless-stopped
+
+  backend-api:
+    build: .
+    container_name: java-backend-compose
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-db:5432/alternancedb"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: secret
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    networks:
+      - tracker-network
     restart: unless-stopped
 
 volumes:
   postgres_data:
+
+networks:
+  tracker-network:
